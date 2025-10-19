@@ -37,9 +37,9 @@
 - rate‑limit handling, retries, progress bars
 - automatic cleaning (no phantom nodes in gephi)
 - gephi‑ready exports (no html):
-  - `gephi/nodes.csv` — label + metrics
-  - `gephi/edges.csv` — `friend` vs `group` edges
-  - `probable_friends.csv` — ranked close‑associate guesses
+  - `gephi/nodes.csv` | label + metrics
+  - `gephi/edges.csv` | `friend` vs `group` edges
+  - `probable_friends.csv` | ranked close‑associate guesses
 - enrichment for osint:
   - degree (popularity)
   - betweenness centrality (bridges / hubs)
@@ -275,4 +275,3 @@ weights are tunable in config. the analyzer skips private data silently.
 
 
 mit © microck — see [license](LICENSE)
-
