@@ -1,0 +1,12 @@
+# Environment variables
+.env
+
+# PyInstaller output
+dist/
+build/
+builds/
+
+# Project-specific folders
+outputs/
+scripts/
+profiles/
