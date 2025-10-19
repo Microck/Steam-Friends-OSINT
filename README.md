@@ -159,14 +159,14 @@ the wizard shows a one‑liner help for each option and saves your choices to
 
 defaults (also in `steam_osint/config_default.yaml`):
 ```yaml
-depth: 2                  # 1 = only friends; 2 = friends of friends
-max_nodes: 500            # hard cap; keeps graphs tidy
-rate_limit_rpm: 120       # requests per minute
+depth: 2                          # 1 = only friends; 2 = friends of friends, 3 = you get how it goes
+max_nodes: 500                    # hard cap; keeps graphs tidy
+rate_limit_rpm: 120               # requests per minute
 skip_private_profiles: true
-include_group_links: true # group edges (toggle off in gephi if noisy)
+include_group_links: true         # group edges (toggle off in gephi if noisy)
 include_game_overlap: false
-hub_percentile: 0.99      # top 1% betweenness → is_hub=true
-weights:                  # probable-friends scoring
+hub_percentile: 0.99              # top 1% betweenness → is_hub=true
+weights:                          # probable-friends scoring
   mutual: 1.0
   jaccard: 1.0
   groups: 0.5
@@ -275,3 +275,4 @@ weights are tunable in config. the analyzer skips private data silently.
 
 
 mit © microck — see [license](LICENSE)
+
