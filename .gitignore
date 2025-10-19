@@ -5,6 +5,7 @@
 dist/
 build/
 builds/
+steam-friends-osint.spec
 
 # Project-specific folders
 outputs/

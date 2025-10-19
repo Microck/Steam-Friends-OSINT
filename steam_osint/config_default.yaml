@@ -1,19 +1,19 @@
-	# scan behavior
-	depth: 2
-	max_nodes: 500
-	rate_limit_rpm: 120
-	skip_private_profiles: true
-	
-	# feature toggles
-	include_group_links: true
-	include_game_overlap: false
-	
-	# enrichment
-	hub_percentile: 0.99  # top 1% betweenness → is_hub
-	
-	# probable friends weights
-	weights:
-	  mutual: 1.0
-	  jaccard: 1.0
-	  groups: 0.5
-	  games: 0.5
+# scan behavior
+depth: 2
+max_nodes: 500
+rate_limit_rpm: 120
+skip_private_profiles: true
+
+# feature toggles
+include_group_links: true
+include_game_overlap: false
+
+# enrichment
+hub_percentile: 0.99  # top 1% betweenness → is_hub
+
+# probable friends weights
+weights:
+mutual: 1.0
+jaccard: 1.0
+groups: 0.5
+games: 0.5
