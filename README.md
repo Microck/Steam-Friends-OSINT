@@ -50,7 +50,7 @@
 
 ---
 
-## how it works (pipeline)
+## how it works
 
 1. the wizard collects:
    - steam api key (stores to `.env`; can skip if already set)
@@ -66,27 +66,25 @@ no scraping; only public web‑api endpoints. private data is skipped.
 
 ---
 
-## repo layout
+## layout
 
 ```
 .
-├─ start.py                  # cli wizard
-├─ .env.example              # steam api key placeholder
+├─ start.py                                       # cli wizard
+├─ steam-friends-osint_X.X.X.exe                  # windows executable
+├─ .env.example                                   # steam api key placeholder
 ├─ requirements.txt
 ├─ assets/
 │  └─ banner.txt
 ├─ steam_osint/
-│  ├─ steam_api.py           # api wrapper + rate limiting + vanity resolver
-│  ├─ scanner.py             # bfs crawler (depth, caps, resume)
-│  ├─ enricher.py            # clean + metrics + gephi csv export
-│  ├─ probable_friends.py    # close-associate ranking
-│  ├─ utils.py               # helpers (paths, time, io)
-│  └─ config_default.yaml    # defaults with inline docs
-├─ profiles/                 # saved config profiles
-├─ outputs/                  # results
-├─ scripts/
-│  ├─ build_exe.ps1          # optional: package windows exe
-│  └─ build_exe.sh           # optional: package on macos/linux
+│  ├─ steam_api.py                                # api wrapper + rate limiting + vanity resolver
+│  ├─ scanner.py                                  # bfs crawler (depth, caps, resume)
+│  ├─ enricher.py                                 # clean + metrics + gephi csv export
+│  ├─ probable_friends.py                         # close-associate ranking
+│  ├─ utils.py                                    # helpers (paths, time, io)
+│  └─ config_default.yaml                         # defaults with inline docs
+├─ profiles/                                      # saved config profiles
+├─ outputs/                                       # results
 ├─ .gitignore
 ├─ LICENSE
 └─ README.md
@@ -259,16 +257,6 @@ weights are tunable in config. the analyzer skips private data silently.
 
 ---
 
-## packaging (optional exe for windows)
-
-```powershell
-# from repo root
-python -m pip install pyinstaller
-scripts\build_exe.ps1
-# output: dist\steam-friends-osint\steam-friends-osint.exe
-```
-
----
 
 ## faq
 
