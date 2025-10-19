@@ -1,13 +1,16 @@
+<p align="center">
+  <a href="https://github.com/Microck/Steam-Friends-OSINT">
+    <img src="assets/logoextended.png" alt="Steam Friends OSINT Logo" width="600">
+  </a>
+</p>
 
-# steam-friends-osint
+<p align="center">an OSINT tool for gathering information on Steam users' friends lists.</p>
 
-turn a steam profile into a clean, gephi‑ready social graph with one command.
-this repo focuses on a friendly onboarding (blue tui), safe defaults, and
-high‑quality csv exports for gephi — no html viewers, just data that works.
-
-- windows • macos • linux
-- python‑only; no web server
-- outputs: `gephi/nodes.csv`, `gephi/edges.csv`, `probable_friends.csv`
+<p align="center">
+  <a href="https://github.com/Microck/Steam-Friends-OSINT/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Microck/Steam-Friends-OSINT?style=flat-square" /></a>
+  <a href="https://github.com/Microck/Steam-Friends-OSINT/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/Microck/Steam-Friends-OSINT?style=flat-square" /></a>
+  <a href="https://github.com/Microck/Steam-Friends-OSINT/issues"><img alt="Issues" src="https://img.shields.io/github/issues/Microck/Steam-Friends-OSINT?style=flat-square" /></a>
+</p>
 
 ---
 
@@ -281,5 +284,6 @@ scripts\build_exe.ps1
 ---
 
 ## license
+
 
 mit © microck — see [license](LICENSE)
