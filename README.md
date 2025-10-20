@@ -1,15 +1,15 @@
 <p align="center">
-  <a href="https://github.com/Microck/Steam-Friends-OSINT">
-    <img src="assets/logoextended.png" alt="Steam Friends OSINT Logo" width="600">
+  <a href="https://github.com/Microck/vapora">
+    <img src="assets/logoextended.png" alt="vapora Logo" width="600">
   </a>
 </p>
 
 <p align="center">an OSINT tool for gathering information on Steam users' friends lists.</p>
 
 <p align="center">
-  <a href="https://github.com/Microck/Steam-Friends-OSINT/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Microck/Steam-Friends-OSINT?style=flat-square" /></a>
-  <a href="https://github.com/Microck/Steam-Friends-OSINT/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/Microck/Steam-Friends-OSINT?style=flat-square" /></a>
-  <a href="https://github.com/Microck/Steam-Friends-OSINT/issues"><img alt="Issues" src="https://img.shields.io/github/issues/Microck/Steam-Friends-OSINT?style=flat-square" /></a>
+  <a href="https://github.com/Microck/vapora/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Microck/vapora?style=flat-square" /></a>
+  <a href="https://github.com/Microck/vapora/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/Microck/vapora?style=flat-square" /></a>
+  <a href="https://github.com/Microck/vapora/issues"><img alt="Issues" src="https://img.shields.io/github/issues/Microck/vapora?style=flat-square" /></a>
 </p>
 
 ---
@@ -71,12 +71,12 @@ no scraping; only public web‑api endpoints. private data is skipped.
 ```
 .
 ├─ start.py                                       # cli wizard
-├─ steam-friends-osint_X.X.X.exe                  # windows executable
+├─ vapora_X.X.X.exe                  # windows executable
 ├─ .env.example                                   # steam api key placeholder
 ├─ requirements.txt
 ├─ assets/
 │  └─ banner.txt
-├─ steam_osint/
+├─ vapora/
 │  ├─ steam_api.py                                # api wrapper + rate limiting + vanity resolver
 │  ├─ scanner.py                                  # bfs crawler (depth, caps, resume)
 │  ├─ enricher.py                                 # clean + metrics + gephi csv export
@@ -111,8 +111,8 @@ prereqs
 
 clone + install
 ```bash
-git clone https://github.com/Microck/Steam-Friends-OSINT.git
-cd Steam-Friends-OSINT
+git clone https://github.com/Microck/vapora.git
+cd vapora
 
 python -m venv .venv
 # windows
@@ -157,7 +157,7 @@ how to import into gephi.
 the wizard shows a one‑liner help for each option and saves your choices to
 `profiles/` so you can reuse them later.
 
-defaults (also in `steam_osint/config_default.yaml`):
+defaults (also in `vapora/config_default.yaml`):
 ```yaml
 depth: 2                          # 1 = only friends; 2 = friends of friends, 3 = you get how it goes
 max_nodes: 500                    # hard cap; keeps graphs tidy
@@ -265,9 +265,6 @@ weights are tunable in config. the analyzer skips private data silently.
 
 - is this allowed?  
   use a legitimate api key and respect rate limits; do not bypass restrictions.
-
-- can it detect alts?  
-  no claims. it surfaces structural patterns; you verify manually.
 
 ---
 

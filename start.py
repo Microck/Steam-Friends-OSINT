@@ -14,11 +14,11 @@ from rich.theme import Theme
 from tqdm import tqdm
 from colorama import init as colorama_init, Fore, Style as CStyle
 
-from steam_osint.enricher import export_gephi
-from steam_osint.probable_friends import compute_probable_friends
-from steam_osint.scanner import scan_network
-from steam_osint.steam_api import SteamAPI
-from steam_osint.utils import open_folder, stamp
+from vapora.enricher import export_gephi
+from vapora.probable_friends import compute_probable_friends
+from vapora.scanner import scan_network
+from vapora.steam_api import SteamAPI
+from vapora.utils import open_folder, stamp
 
 
 # ────────────────────────────── Initialization
@@ -47,7 +47,7 @@ ROOT = app_root()
 ASSETS = resource_path("assets")
 OUTPUTS = ROOT / "outputs"
 PROFILES = ROOT / "profiles"
-DEFAULT_CFG = resource_path("steam_osint", "config_default.yaml")
+DEFAULT_CFG = resource_path("vapora", "config_default.yaml")
 ENV = ROOT / ".env"
 
 # ────────────────────────────── Styles (CMD-Safe)

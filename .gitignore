@@ -6,8 +6,10 @@ dist/
 build/
 builds/
 steam-friends-osint.spec
+vapora.spec
 
 # Project-specific folders
 outputs/
 scripts/
 profiles/
+vapora/__pycache__
