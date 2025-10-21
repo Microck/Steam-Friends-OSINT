@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Microck/vapora">
-    <img src="assets/vapora.png" alt="vapora Logo" width="600">
+    <img src="assets/vapora.png" alt="vapora Logo" width="300">
   </a>
 </p>
 
@@ -272,4 +272,5 @@ weights are tunable in config. the analyzer skips private data silently.
 
 
 mit © microck — see [license](LICENSE)
+
 
