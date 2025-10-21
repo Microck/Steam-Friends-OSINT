@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<p align="center">an OSINT tool for gathering information on Steam users' friends lists.</p>
+<p align="center">an OSINT tool for gathering information on Steam users' friends lists. </p>
 
 <p align="center">
   <a href="https://github.com/Microck/vapora/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Microck/vapora?style=flat-square" /></a>
@@ -15,6 +15,7 @@
 ---
 
 ## tl;dr
+interactive python tool to map a steam user’s friend network, enrich it with community metrics, and export gephi‑ready csvs & a “probable friends” report:
 
 - install python 3.10+
 - get a steam api key (free): https://steamcommunity.com/dev/apikey
@@ -272,5 +273,6 @@ weights are tunable in config. the analyzer skips private data silently.
 
 
 mit © microck — see [license](LICENSE)
+
 
 
