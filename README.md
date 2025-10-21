@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Microck/vapora">
-    <img src="assets/logoextended.png" alt="vapora Logo" width="600">
+    <img src="assets/vapora.png" alt="vapora Logo" width="600">
   </a>
 </p>
 
