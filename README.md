@@ -71,7 +71,7 @@ no scraping; only public web‑api endpoints. private data is skipped.
 ```
 .
 ├─ start.py                                       # cli wizard
-├─ vapora_X.X.X.exe                  # windows executable
+├─ vapora-X.X.X.exe                               # windows executable
 ├─ .env.example                                   # steam api key placeholder
 ├─ requirements.txt
 ├─ assets/
@@ -272,3 +272,4 @@ weights are tunable in config. the analyzer skips private data silently.
 
 
 mit © microck — see [license](LICENSE)
+
