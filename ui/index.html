@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Steam Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="old-steam-web.css" />
+    <link rel="stylesheet" href="theme-override.css" />
+    <!-- Minimal inline fallback to guarantee layout even if override CSS fails to load -->
+    <style>
+      .views{padding:12px}
+      .view{display:none}
+      .view.active{display:block}
+      .scan-grid{display:grid;grid-template-columns:1.2fr 56px 1.2fr;grid-template-rows:auto 1fr;gap:24px;max-width:1440px}
+      .params-panel{grid-column:1;grid-row:1;padding:18px 20px}
+      .help-column{grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:10px;padding:18px 8px}
+      .target-panel{grid-column:3;grid-row:1 / span 2;padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+      .mode-output-row{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr;gap:12px}
+      .icon-column{grid-column:2;grid-row:2;display:flex;flex-direction:column;gap:10px;padding:16px 8px}
+      .param-row{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;margin-bottom:14px}
+      .depth-row{grid-template-columns:110px auto 1fr}
+      .depth-buttons{display:flex;gap:4px}
+      .target-input{width:100%}
+      .btn-mode.active,.btn-depth.active{filter:brightness(0.9)}
+      .output-tree pre{margin:0}
+      /* Design mode */
+      body.design-mode .views{position:relative}
+      .design-overlays{position:absolute; inset:0; pointer-events:auto; z-index:9998}
+      .design-box{position:absolute; border:1px dashed #5cf; background:rgba(80,160,255,0.06); pointer-events:auto; cursor:move; touch-action:none; user-select:none}
+      .design-box .handle{position:absolute; width:10px; height:10px; background:#5cf; border:1px solid #137; box-sizing:border-box; touch-action:none}
+      .design-box .h-nw{left:-5px; top:-5px; cursor:nwse-resize}
+      .design-box .h-ne{right:-5px; top:-5px; cursor:nesw-resize}
+      .design-box .h-sw{left:-5px; bottom:-5px; cursor:nesw-resize}
+      .design-box .h-se{right:-5px; bottom:-5px; cursor:nwse-resize}
+      .design-panel{position:fixed; right:12px; bottom:12px; background:#1b1f24; color:#cfd6e4; border:1px solid #2a2f36; border-radius:6px; padding:8px 10px; display:flex; gap:8px; align-items:center; z-index:9999; box-shadow:0 2px 10px rgba(0,0,0,0.5)}
+      .design-panel input[type="number"], .design-panel select, .design-panel input[type="text"]{width:64px}
+      .design-panel button{padding:4px 8px}
+      .design-label{position:absolute; left:0; top:-16px; font:12px/1.2 sans-serif; background:#1b1f24; color:#8dc2ff; padding:1px 4px; border:1px solid #2a2f36; border-radius:3px}
+      .design-box.active{border-color:#9cf; box-shadow:0 0 0 1px rgba(157,204,255,0.4) inset}
+      .design-marquee{position:absolute; border:1px dashed #9cf; background:rgba(80,160,255,0.12); pointer-events:none}
+      /* Coordinate mode (inactive by default; only applies when body.layout-abs) */
+      .scan-grid{position:relative;max-width:1440px;min-height:640px;}
+      /* Panels per JSON */
+      body.layout-abs #box-params{position:absolute;left:18px;top:54px;width:684px;height:180px;overflow:visible;z-index:10;}
+      body.layout-abs #box-target{position:absolute;left:822px;top:54px;width:368px;height:546px;overflow:visible;z-index:10;}
+      body.layout-abs #box-rail{position:absolute;left:1200px;top:54px;width:54px;height:546px;display:flex;flex-direction:column;gap:12px;padding:12px 8px;background:var(--GreenBG);border:1px solid #2a2f36;border-radius:6px;overflow:visible;z-index:10;}
+      /* Params internals per JSON */
+      body.layout-abs #box-params .param-label{position:absolute;left:18px;width:110px;height:15px;}
+      body.layout-abs #box-params .depth-row .param-label{top:18px;}
+      body.layout-abs #box-params .param-row:nth-of-type(2) .param-label{top:54px;}
+      body.layout-abs #box-params .param-row:nth-of-type(3) .param-label{top:90px;}
+      body.layout-abs #nodes{position:absolute;left:138px;top:48px;width:168px;height:30px;}
+      body.layout-abs #rpm{position:absolute;left:138px;top:84px;width:168px;height:30px;}
+      body.layout-abs #cb-skip-private{position:absolute;left:378px;top:18px;width:21px;height:21px;}
+      body.layout-abs #cb-groups{position:absolute;left:378px;top:54px;width:21px;height:21px;}
+      body.layout-abs #cb-games{position:absolute;left:378px;top:90px;width:21px;height:21px;}
+      body.layout-abs #cb-skip-private + span{position:absolute;left:408px;top:21px;width:120px;}
+      body.layout-abs #cb-groups + span{position:absolute;left:408px;top:57px;width:138px;}
+      body.layout-abs #cb-games + span{position:absolute;left:408px;top:93px;width:136px;}
+      body.layout-abs #apply-btn{position:absolute;left:600px;top:132px;width:66px;height:30px;}
+      body.layout-abs .depth-buttons{position:absolute;left:186px;top:12px;width:120px;height:30px;}
+      body.layout-abs .depth-buttons .btn-depth{position:absolute;top:0;width:24px;height:30px;}
+      body.layout-abs .depth-buttons .btn-depth:nth-child(1){left:0px;}
+      body.layout-abs .depth-buttons .btn-depth:nth-child(2){left:24px;}
+      body.layout-abs .depth-buttons .btn-depth:nth-child(3){left:48px;}
+      body.layout-abs .depth-buttons .btn-depth:nth-child(4){left:72px;}
+      body.layout-abs .depth-buttons .btn-depth:nth-child(5){left:96px;}
+      body.layout-abs #btn-analyze{position:absolute;left:64px;top:408px;width:240px;height:40px;}
+      body.layout-abs #btn-estimate{position:absolute;left:120px;top:456px;width:132px;height:32px;}
+
+      /* Mode + Output area */
+      body.layout-abs #box-output {
+        position: absolute;
+        left: 18px;
+        top: 246px;
+        width: 684px;
+        height: 270px; /* Set correct height based on design tool screenshot */
+        padding: 18px !important;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: 180px 1fr; /* Columns for Mode and Output */
+        gap: 12px; /* Reduced gap between Mode and Output */
+      }
+      body.layout-abs #box-output .mode-panel,
+      body.layout-abs #box-output .output-panel {
+          position: relative; /* Anchor for children */
+          padding: 0 !important;
+          height: 100%;
+      }
+      body.layout-abs #box-output .section-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0 !important;
+      }
+      body.layout-abs .mode-panel .mode-buttons-group {
+        position: absolute;
+        top: 25px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      body.layout-abs .mode-panel .btn-mode {
+        width: 100%;
+        margin: 0;
+        border-radius: 0 !important;
+      }
+      body.layout-abs .output-panel .output-tree {
+        position: absolute;
+        top: 25px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 25px);
+      }
+      /* Remove old/conflicting absolute positioning from buttons */
+      body.layout-abs #mode-deep,
+      body.layout-abs #mode-surface,
+      body.layout-abs #mode-gephi {
+        position: static;
+        width: auto;
+        height: auto;
+      }
+      
+      /* Hard reset to remove theme spacing that skews pixel coords */
+      body.layout-abs #nodes,
+      body.layout-abs #rpm,
+      body.layout-abs .btn-depth,
+      body.layout-abs #btn-analyze,
+      body.layout-abs #btn-estimate{box-sizing:border-box;}
+      /* Pixel-true controls in coord mode */
+      body.layout-abs .btn-depth{padding:0 !important;min-width:0 !important;line-height:30px;}
+      body.layout-abs .param-input{padding:0 6px !important;height:30px;line-height:30px;box-sizing:border-box;}
+      body.layout-abs .check-item{display:contents;}
+      /* Coordinate-mode panel cleanup */
+      body.layout-abs .panel{padding:0 !important;}
+      body.layout-abs #box-params .param-row,
+      body.layout-abs #box-params .depth-row{display:block !important;margin:0;padding:0;}
+      body.layout-abs #cb-skip-private + span,
+      body.layout-abs #cb-groups + span,
+      body.layout-abs #cb-games + span{white-space:nowrap;}
+      body.layout-abs .depth-buttons{z-index:11;}
+      body.layout-abs .scan-grid::before{content:'';display:none;}
+      body.design-mode, body.design-mode * { user-select: none !important; }
+    </style>
+  </head>
+  <body class="layout-abs">
+    <header class="toolbar">
+      <nav class="navbar tabs">
+        <ul>
+          <li><a class="nav-link active" data-tab="scan" href="#">Scan</a></li>
+          <li><a class="nav-link" data-tab="results" href="#">Results</a></li>
+        </ul>
+      </nav>
+
+      <div class="toolbar-actions">
+        <span id="api-key-hint" class="api-key-hint" hidden>Steam API key required</span>
+        <button class="button icon-btn" id="btn-key" title="Set API key (set via .env)">
+          <img class="icon-img" src="../assets/key.png" alt="key" />
+        </button>
+        <button class="button align-icon" id="open-output">
+          <img class="icon-img" src="../assets/folder.jpg" alt="folder"/> <span>Open output folder</span>
+        </button>
+        <button class="button" id="btn-design" title="Toggle design mode">Design</button>
+        <button class="button" id="btn-layout" title="Toggle coordinate layout">Coords</button>
+        <div class="window-controls">
+          <button class="button win-btn" id="btn-win-min" title="Minimize">_</button>
+          <button class="button win-btn" id="btn-win-close" title="Close">×</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="views">
+      <!-- Lock overlay shown until API key is present -->
+      <div id="lock-overlay" class="lock-overlay" hidden></div>
+
+      <!-- Simple modal for API key entry -->
+      <div id="key-modal" class="vap-modal" hidden>
+        <div class="modal-content panel">
+          <div class="section-title">Steam API key</div>
+          <input type="password" id="api-key-input" class="param-input" placeholder="Paste your API key" />
+          <div id="api-key-error" class="form-error" hidden>Invalid API key format.</div>
+          <div class="modal-actions">
+            <button class="button" id="api-key-save">Save</button>
+            <button class="button" id="api-key-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note modal when key already set -->
+      <div id="key-note-modal" class="vap-modal" hidden>
+        <div class="modal-content panel">
+          <div class="section-title">Steam API key</div>
+          <div class="note-text" style="font-size: 13px;">An API key is already set. Continuing will replace it.</div>
+          <div class="modal-actions">
+            <button class="button" id="key-note-ok">OK</button>
+            <button class="button" id="key-note-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast message container -->
+      <div id="toast" class="toast" hidden>API key required</div>
+
+      <section id="view-scan" class="view active">
+        <div class="scan-grid">
+          <!-- Left: Parameters -->
+          <div class="panel params-panel" id="box-params" data-designable="1" data-label="Params">
+            <div class="param-row depth-row">
+              <label class="param-label" data-label="Label Depth">Depth</label>
+              <div class="depth-buttons" data-label="Depth Buttons">
+                <button class="btn-depth" data-depth="1">1</button>
+                <button class="btn-depth active" data-depth="2">2</button>
+                <button class="btn-depth" data-depth="3">3</button>
+                <button class="btn-depth" data-depth="4">4</button>
+                <button class="btn-depth" data-depth="5">5</button>
+              </div>
+              
+              <div class="checkbox-group">
+                <label class="check-item" data-label="Checkbox Skip Private">
+                  <input type="checkbox" id="cb-skip-private" checked />
+                  <span>Skip private profiles</span>
+                </label>
+                <label class="check-item" data-label="Checkbox Shared Groups">
+                  <input type="checkbox" id="cb-groups" checked />
+                  <span>Link via shared groups</span>
+                </label>
+                <label class="check-item" data-label="Checkbox Shared Games">
+                  <input type="checkbox" id="cb-games" />
+                  <span>Link via shared games</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="param-row">
+              <label class="param-label" data-label="Label Nodes">Nodes</label>
+              <input type="text" id="nodes" placeholder="e.g., 250" class="param-input" data-label="Input Nodes" />
+            </div>
+
+            <div class="param-row">
+              <label class="param-label" data-label="Label RPM">Requests/min</label>
+              <input type="text" id="rpm" placeholder="e.g., 120" class="param-input" data-label="Input RPM" />
+            </div>
+
+            <div class="param-row apply-row">
+              <button class="button" id="apply-btn" data-label="Button Apply">Apply</button>
+            </div>
+          </div>
+
+          <!-- Middle: Vertical rail (icons + recent targets stacked on the divider) -->
+          <div class="panel rail-panel spacer-column" id="box-rail" data-designable="1" data-label="Rail">
+            <div class="rail-icons">
+              <button class="rail-btn" id="btn-load" title="Load profile">
+                <img class="icon-img" src="../assets/presets.png" alt="load" />
+              </button>
+              <div id="recent-thumbs" class="recent-thumbs"></div>
+              <button class="rail-btn" id="btn-save" title="Save profile">
+                <img class="icon-img" src="../assets/save.svg" alt="save" />
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Target card -->
+          <div class="panel target-panel" id="box-target" data-designable="1" data-label="Target">
+            <div class="target-top">
+              <span class="target-label" data-label="Label Target">Target</span>
+              <div class="target-input-wrap">
+                <input type="text" id="target" placeholder="SteamID / SteamID64 / vanity / URL" class="target-input" data-label="Input Target" />
+              </div>
+            </div>
+            <div class="target-username" id="target-username" data-label="Display Username"></div>
+            <div class="target-avatar" data-label="Display Avatar">
+              <img src="../assets/placeholder.jpg" alt="avatar" class="avatar-img" />
+            </div>
+            <button class="button btn-analyze" id="btn-analyze" data-label="Button Analyze">Analyze</button>
+            <button class="button btn-estimate" id="btn-estimate" data-label="Button Estimate">Estimate</button>
+          </div>
+
+          <!-- Bottom left: Mode + Output (together in one panel) -->
+          <div class="mode-output-row">
+            <div class="panel mode-output-wrap" id="box-output" data-designable="1" data-label="Mode+Output">
+              <div class="mode-panel">
+                <div class="section-title" data-label="Title Mode">Mode</div>
+                <div class="mode-buttons-group" data-label="Mode Buttons Group">
+                    <button class="btn-mode" data-mode="full" id="mode-deep" data-label="Button Mode Deep">Deep</button>
+                    <button class="btn-mode" data-mode="basic" id="mode-surface" data-label="Button Mode Surface">Surface</button>
+                    <button class="btn-mode" data-mode="gephi" id="mode-gephi" data-label="Button Mode Gephi">Gephi</button>
+                </div>
+              </div>
+
+              <div class="output-panel">
+                <div class="section-title" data-label="Title Output">Output</div>
+                <div class="panel-inset output-tree" data-label="View Output Tree">
+                  <pre id="output-tree"><span class="tree-root" data-key="root">&lt;steamid64&gt;/&lt;yyyymmdd_hhmmss&gt;/</span>
+<span class="tree-branch">├─</span> <span class="tree-folder" data-key="gephi">gephi/</span>
+<span class="tree-branch">│  ├─</span> <span class="tree-file" data-key="nodes">nodes.csv</span>
+<span class="tree-branch">│  └─</span> <span class="tree-file" data-key="edges">edges.csv</span>
+<span class="tree-branch">├─</span> <span class="tree-file" data-key="estimates">estimates.json</span>
+<span class="tree-branch">├─</span> <span class="tree-file" data-key="scan">scan.json</span>
+<span class="tree-branch">└─</span> <span class="tree-file" data-key="runlog">run.log</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Removed floating icon column; tools moved into recent-column to look docked -->
+        </div>
+      </section>
+
+      <section id="view-results" class="view">
+        <div class="panel results-panel">
+          <h2>Results</h2>
+          <div class="results-layout">
+            <div class="results-log panel-inset">
+              <h3>Run log</h3>
+              <pre id="log">Ready.</pre>
+            </div>
+            <div class="results-list panel-inset">
+              <h3>Results</h3>
+              <ul id="result-items"></ul>
+            </div>
+          </div>
+          <div class="results-actions">
+            <button class="button">Export selected…</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="design-overlays" class="design-overlays" hidden></div>
+    <div id="design-panel" class="design-panel" hidden>
+      <span>Grid</span>
+      <input type="number" id="design-grid" value="8" min="1" step="1" />
+      <label><input type="checkbox" id="design-snap" checked /> Snap</label>
+      <label>Scope
+        <select id="design-scope">
+          <option value="auto" selected>Auto</option>
+          <option value="panels">Panels</option>
+          <option value="rows">Rows</option>
+          <option value="controls">Controls</option>
+          <option value="all">All</option>
+          <option value="custom">Custom</option>
+        </select>
+      </label>
+      <input type="text" id="design-custom" placeholder="CSS selector" />
+      <button id="design-all" title="Select all">All</button>
+      <button id="design-clear" title="Clear selection">Clear</button>
+      <span id="design-info"></span>
+      <button id="design-apply" title="Apply to elements">Apply</button>
+      <button id="design-copy">Copy JSON</button>
+      <button id="design-copy-all">Copy All JSON</button>
+      <button id="design-exit" title="Exit design mode">Exit</button>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

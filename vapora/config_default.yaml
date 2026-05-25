@@ -8,12 +8,21 @@ skip_private_profiles: true
 include_group_links: true
 include_game_overlap: false
 
-# enrichment
+# enrichment (for Graphi)
 hub_percentile: 0.99  # top 1% betweenness → is_hub
 
-# probable friends weights
-weights:
-mutual: 1.0
-jaccard: 1.0
-groups: 0.5
-games: 0.5
+# run mode: full | basic | graphi
+run_mode: full
+
+# IRL friend probability options (for estimates)
+irl:
+  top_n_for_mean: 5
+  reasonable_count: 50
+
+# Location probability options (for estimates)
+location:
+  reasonable_count: 100
+  score_strategy: multiply  # multiply | sum
+
+# steamhistory
+request_timeout: 25

@@ -6,7 +6,7 @@ import platform
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 
 def stamp() -> str:
@@ -19,13 +19,11 @@ def ensure_dir(p: Path) -> None:
 
 def write_json(path: Path, data: Dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def read_json(path: Path) -> Dict[str, Any]:
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def open_folder(path: Path) -> None:
@@ -38,3 +36,23 @@ def open_folder(path: Path) -> None:
             subprocess.run(["xdg-open", str(path)], check=False)
     except Exception:
         pass
+
+
+class RunLogger:
+    def __init__(self, path: Path) -> None:
+        self.path = path
+        ensure_dir(path.parent)
+        self.path.write_text("", encoding="utf-8")
+
+    def write(self, msg: str) -> None:
+        ts = datetime.now().strftime("%H:%M:%S")
+        line = f"[{ts}] {msg}\n"
+        try:
+            with self.path.open("a", encoding="utf-8") as f:
+                f.write(line)
+        except Exception:
+            pass
+
+    def close(self) -> None:
+        # no-op for simple file logger
+        return

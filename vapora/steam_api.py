@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 from collections import deque
-from typing import Dict, List, Optional, Tuple
+from typing import Deque, Dict, List, Optional
 
 import requests
 
@@ -11,7 +11,7 @@ class RateLimiter:
     def __init__(self, rpm: int = 60) -> None:
         self.window = 60.0
         self.rpm = max(1, rpm)
-        self.calls: deque[float] = deque()
+        self.calls: Deque[float] = deque()
 
     def wait(self) -> None:
         now = time.monotonic()
@@ -43,19 +43,10 @@ class SteamAPI:
         except requests.RequestException:
             return None
 
-    def ensure_steam64(self, id_or_url: str) -> Optional[str]:
-        s = id_or_url.strip()
-        if s.isdigit():
-            return s
-        # attempt to extract vanity from url
-        for part in s.replace("/", " ").split():
-            if part and part.lower() not in {"profiles", "id", "steamcommunity.com"}:
-                candidate = part
-        else:
-            candidate = s
-
+    # Vanity only (used by ids.parse)
+    def ensure_steam64_from_vanity(self, vanity: str) -> Optional[str]:
         data = self._get(
-            "/ISteamUser/ResolveVanityURL/v1/", {"vanityurl": candidate}
+            "/ISteamUser/ResolveVanityURL/v1/", {"vanityurl": vanity}
         )
         if not data:
             return None
@@ -66,6 +57,7 @@ class SteamAPI:
             return None
         return None
 
+    # Standard calls
     def get_friend_list(self, steamid: str) -> List[str]:
         data = self._get(
             "/ISteamUser/GetFriendList/v1/",
