@@ -1,0 +1,848 @@
+/**
+ * Old Steam Theme - Web Port
+ * A complete CSS theme inspired by the classic Steam interface
+ * Ready to use in any webpage
+ * 
+ * Usage:
+ * <link rel="stylesheet" href="old-steam-web.css">
+ */
+
+/* ============================================================
+   COLOR VARIABLES - Customize these to match your needs
+   ============================================================ */
+
+:root {
+    /* Original OGSteam Colors */
+    --LightGreenBG: #5a6a50;
+    --GreenBG: #4c5844;
+    --DarkGreenBG: #3e4637;
+    --BorderBright: #808080;
+    --BorderDark: #282e22;
+    --OffWhite: #d8ded3;
+    --Maize: #c4b550;
+    --MaizeBG: #91863c;
+    --Label: #a0aa95;
+    --DimListText: #758666;
+    --DisabledText1: #75806f;
+    --DisabledText2: #282e22;
+    --FullGreen: #7ea64b;
+
+    /* Border Styles */
+    --Inset: 1px inset var(--BorderBright);
+    --Outset: 1px outset var(--BorderBright);
+    
+    /* Color Filters for SVG/Images */
+    --MaizeFilter: brightness(0) saturate(100%) invert(75%) sepia(22%) saturate(895%) hue-rotate(15deg) brightness(90%) contrast(95%);
+    --OffWhiteFilter: brightness(0) saturate(100%) invert(93%) sepia(10%) saturate(157%) hue-rotate(50deg) brightness(95%) contrast(91%);
+    --DisabledText1Filter: brightness(0) saturate(100%) invert(52%) sepia(22%) saturate(374%) hue-rotate(49deg) brightness(93%) contrast(91%);
+}
+
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
+body {
+    background: var(--DarkGreenBG);
+    color: var(--OffWhite);
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background: var(--DarkGreenBG);
+}
+
+a {
+    color: var(--OffWhite);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--Maize);
+}
+
+::selection {
+    text-shadow: none;
+    background-color: var(--MaizeBG);
+    color: var(--OffWhite);
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+button, .button, input[type="button"], input[type="submit"] {
+    box-shadow: none;
+    background: var(--GreenBG);
+    border-radius: 0;
+    border: var(--Outset);
+    color: var(--OffWhite);
+    transition: none;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+button:hover, .button:hover, input[type="button"]:hover, input[type="submit"]:hover {
+    color: var(--Maize);
+    background: var(--GreenBG);
+}
+
+button:active, .button:active, input[type="button"]:active, input[type="submit"]:active {
+    border: var(--Inset);
+    background: var(--DarkGreenBG);
+}
+
+button:disabled, button.disabled, .button:disabled, .button.disabled {
+    color: var(--DisabledText1);
+    background-color: var(--DarkGreenBG);
+    cursor: not-allowed;
+}
+
+button:disabled:hover, button.disabled:hover, .button:disabled:hover, .button.disabled:hover {
+    color: var(--DisabledText1);
+}
+
+
+/* ============================================================
+   FORM INPUTS
+   ============================================================ */
+
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+input[type="search"], 
+input[type="url"], 
+input[type="number"],
+textarea, 
+select {
+    background-color: var(--DarkGreenBG);
+    box-shadow: none;
+    border-radius: 0;
+    border: var(--Inset);
+    color: var(--OffWhite);
+    padding: 5px 8px;
+    font-family: inherit;
+    transition: none;
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="search"]:hover,
+input[type="url"]:hover,
+input[type="number"]:hover,
+textarea:hover,
+select:hover {
+    background-color: var(--DarkGreenBG);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    background-color: var(--DarkGreenBG);
+    outline: 2px solid var(--Maize);
+    outline-offset: 0;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--Label);
+    opacity: 1;
+}
+
+/* Dropdown Selects */
+select {
+    background: var(--DarkGreenBG);
+    border: var(--Inset);
+    border-radius: 0;
+    color: var(--OffWhite);
+    padding: 5px;
+    cursor: pointer;
+}
+
+select:hover {
+    background: var(--GreenBG);
+    color: var(--Maize);
+}
+
+/* Checkboxes */
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 21px;
+    height: 21px;
+    background: transparent;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV/TSkUqBe0g4pChOtlFRRxLFYtgobQVWnUwufQLmjQkKS6OgmvBwY/FqoOLs64OroIg+AHi7OCk6CIl/i8ptIjx4Lgf7+497t4BQqvGVDMQB1TNMjLJhJgvrIrBV/gRQBgihiRm6qnsYg6e4+sePr7exXiW97k/x6BSNBngE4njTDcs4g3i2U1L57xPHGEVSSE+J5406ILEj1yXXX7jXHZY4JkRI5eZJ44Qi+UelnuYVQyVeIY4qqga5Qt5lxXOW5zVWoN17slfGCpqK1mu0xxDEktIIU0dyWigihosxGjVSDGRof2Eh3/U8afJJZOrCkaOBdShQnL84H/wu1uzND3lJoUSQN+LbX+MA8FdoN207e9j226fAP5n4Err+ustYO6T9GZXix4B4W3g4rqryXvA5Q4w8qRLhuRIfppCqQS8n9E3FYDhW2Bgze2ts4/TByBHXS3fAAeHwESZstc93t3f29u/Zzr9/QBxkHKmIgHJ5AAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+gDBA8nIBT2C1gAAABaSURBVDjLY2AY0YARmVOQEZ/JwMAwjQxzsibMWDgdxmFBk5yGroAQQHLIdFwK/pPjXXR9TLQI01FDRw0dNRQtLzOQmPdRAHqBksXAwDCtICOe1JIqi2EUwAAAwMkWMIiZzjgAAAAASUVORK5CYII=);
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+}
+
+input[type="checkbox"]:checked {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV/TSkUqBe0g4pChOtlFRRxLFYtgobQVWnUwufQLmjQkKS6OgmvBwY/FqoOLs64OroIg+AHi7OCk6CIl/i8ptIjx4Lgf7+497t4BQqvGVDMQB1TNMjLJhJgvrIrBV/gRQBgihiRm6qnsYg6e4+sePr7exXiW97k/x6BSNBngE4njTDcs4g3i2U1L57xPHGEVSSE+J5406ILEj1yXXX7jXHZY4JkRI5eZJ44Qi+UelnuYVQyVeIY4qqga5Qt5lxXOW5zVWoN17slfGCpqK1mu0xxDEktIIU0dyWigihosxGjVSDGRof2Eh3/U8afJJZOrCkaOBdShQnL84H/wu1uzND3lJoUSQN+LbX+MA8FdoN207e9j226fAP5n4Err+ustYO6T9GZXix4B4W3g4rqryXvA5Q4w8qRLhuRIfppCqQS8n9E3FYDhW2Bgze2ts4/TByBHXS3fAAeHwESZstc93t3f29u/Zzr9/QBxkHKmIgHJ5AAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+gDBA8pLxrKO0cAAAEuSURBVDjL7ZSxdYMwEIaFpPdAomIFVsAjwApu3Tqu3GWGdKlw2rReAUYwK7ACFZJ4TyelQXmEZ2FMyuS6k07f3f2SDqE/bcHUOR8PLwihcgPn9P7xeXEOnW2W84BHNink4guwW9qdn8O/0W4Yhtd765ugxpik7/tKa52vhmqtc6115gNKKSsAyH1JvZVKKas5GABSIcQNALKlTrxQa22ilLoCQOqAUsrKGJO6mDAM357W1BiTKqWuWutcCHFzwCAIOs55QSmtV0MppTUhpBkrzIQQlbU2cUDGmBe4WCljrHDg72CMW875jlLabNIUY9xFUbTHGLcOOCZqHz25RU0JIW0URXtCSM05360B3oWOf3mqbxPHcYEx7hb+/s87mU8bhFB5Ph6enVQn9G/OvgCMcoYwTsJ1lAAAAABJRU5ErkJggg==);
+}
+
+/* Radio Buttons */
+input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+    height: 13px;
+    width: 13px;
+    border: var(--Inset);
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+}
+
+input[type="radio"]::before {
+    content: "";
+    height: 7px;
+    width: 7px;
+    margin: 2px 0 0 2px;
+    display: block;
+    opacity: 0;
+    background-color: var(--Maize);
+    position: absolute;
+}
+
+input[type="radio"]:checked::before {
+    opacity: 1;
+}
+
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
+    outline: 2px solid var(--Maize);
+    outline-offset: 2px;
+}
+
+/* Labels */
+label {
+    color: var(--Label);
+    cursor: pointer;
+}
+
+label.active,
+label:hover {
+    color: var(--Maize);
+}
+
+
+/* ============================================================
+   CONTAINERS & PANELS
+   ============================================================ */
+
+.panel, .container, .card, .box {
+    border: var(--Outset);
+    padding: 15px;
+    background-color: var(--GreenBG);
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.panel-inset, .container-inset {
+    border: var(--Inset);
+    background-color: var(--DarkGreenBG);
+}
+
+.panel-highlight, .container-highlight {
+    background-color: var(--LightGreenBG);
+    border: var(--Outset);
+}
+
+
+/* ============================================================
+   NAVIGATION & MENUS
+   ============================================================ */
+
+nav, .navbar {
+    background: var(--GreenBG);
+    border: var(--Outset);
+    padding: 0;
+    margin: 0;
+}
+
+nav ul, .navbar ul, .menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 2px;
+}
+
+nav li, .navbar li, .menu li {
+    margin: 0;
+    padding: 0;
+}
+
+nav a, .navbar a, .menu a, .nav-link {
+    display: block;
+    padding: 8px 15px;
+    background: var(--GreenBG);
+    border: var(--Outset);
+    color: var(--OffWhite);
+    text-decoration: none;
+    transition: none;
+    box-sizing: border-box;
+}
+
+nav a:hover, .navbar a:hover, .menu a:hover, .nav-link:hover {
+    background: var(--GreenBG);
+    color: var(--Maize);
+}
+
+nav a:active, .navbar a:active, .menu a:active, .nav-link:active {
+    border: var(--Inset);
+    background: var(--DarkGreenBG);
+}
+
+nav a.active, .navbar a.active, .menu a.active, .nav-link.active {
+    background: var(--DarkGreenBG);
+    border: var(--Inset);
+    color: var(--Maize);
+}
+
+/* Dropdown Menus */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--GreenBG);
+    border: var(--Outset);
+    box-shadow: none;
+    z-index: 1000;
+    min-width: 150px;
+    padding: 0;
+    margin: 4px 0 0 0;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown.active .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu li {
+    display: block;
+}
+
+.dropdown-menu a {
+    border: none;
+    padding: 8px 15px;
+}
+
+.dropdown-menu a:hover {
+    background: transparent;
+    color: var(--Maize);
+}
+
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background: var(--GreenBG);
+    border: var(--Outset);
+}
+
+thead {
+    background: var(--LightGreenBG);
+}
+
+th {
+    text-align: left;
+    padding: 8px 10px;
+    color: var(--Maize);
+    font-weight: bold;
+    border-bottom: 1px solid var(--BorderBright);
+}
+
+td {
+    padding: 8px 10px;
+    color: var(--OffWhite);
+    border-bottom: 1px solid var(--BorderDark);
+}
+
+tr:hover {
+    background: var(--LightGreenBG);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ============================================================
+   MODALS & DIALOGS
+   ============================================================ */
+
+.modal, .dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--GreenBG);
+    border: var(--Outset);
+    box-shadow: none;
+    padding: 20px;
+    z-index: 9999;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow: auto;
+}
+
+.modal-overlay, .dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9998;
+}
+
+.modal-header, .dialog-header {
+    color: var(--Maize);
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--BorderBright);
+}
+
+.modal-body, .dialog-body {
+    color: var(--OffWhite);
+    margin-bottom: 15px;
+}
+
+.modal-footer, .dialog-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid var(--BorderBright);
+}
+
+/* Close Button */
+.close-button, .modal-close, .dialog-close {
+    background: var(--GreenBG);
+    border: var(--Outset);
+    border-radius: 0;
+    height: 20px;
+    width: 20px;
+    padding: 0;
+    cursor: pointer;
+    transition: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--OffWhite);
+    font-size: 16px;
+    line-height: 1;
+}
+
+.close-button:hover, .modal-close:hover, .dialog-close:hover {
+    background: var(--GreenBG);
+    color: var(--Maize);
+}
+
+.close-button:active, .modal-close:active, .dialog-close:active {
+    background: var(--DarkGreenBG);
+    border: var(--Inset);
+}
+
+
+/* ============================================================
+   SCROLLBARS
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--DarkGreenBG);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--GreenBG);
+    border-radius: 0;
+    border: var(--Outset);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--LightGreenBG);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--DarkGreenBG);
+}
+
+
+/* ============================================================
+   SEARCH BOXES
+   ============================================================ */
+
+.search-box, .searchbox {
+    display: flex;
+    align-items: center;
+    background: var(--DarkGreenBG);
+    border: var(--Inset);
+    border-radius: 0;
+    padding: 5px;
+}
+
+.search-box input, .searchbox input {
+    background: transparent;
+    border: none;
+    color: var(--Label);
+    padding: 0 5px;
+    flex: 1;
+}
+
+.search-box input:focus, .searchbox input:focus {
+    outline: none;
+}
+
+.search-button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
+
+/* ============================================================
+   TAGS & BADGES
+   ============================================================ */
+
+.tag, .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--GreenBG);
+    border: var(--Outset);
+    color: var(--OffWhite);
+    font-size: 12px;
+    margin: 2px;
+}
+
+.tag:hover, .badge:hover {
+    color: var(--Maize);
+}
+
+
+/* ============================================================
+   ALERTS & NOTIFICATIONS
+   ============================================================ */
+
+.alert, .notification {
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: var(--Outset);
+    background: var(--GreenBG);
+    color: var(--OffWhite);
+}
+
+.alert-info, .notification-info {
+    background: var(--LightGreenBG);
+    color: var(--OffWhite);
+}
+
+.alert-success, .notification-success {
+    background: var(--FullGreen);
+    color: var(--OffWhite);
+}
+
+.alert-warning, .notification-warning {
+    background: var(--MaizeBG);
+    color: var(--DarkGreenBG);
+}
+
+.alert-error, .notification-error {
+    background: var(--DarkGreenBG);
+    border-color: #8b0000;
+    color: #ff6b6b;
+}
+
+
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--OffWhite);
+    margin: 0 0 10px 0;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 28px;
+    color: var(--Maize);
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+h4 {
+    font-size: 18px;
+}
+
+h5, h6 {
+    font-size: 16px;
+}
+
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+
+ul, ol {
+    color: var(--OffWhite);
+}
+
+ul li::marker {
+    color: var(--Maize);
+}
+
+ol li::marker {
+    color: var(--Maize);
+}
+
+
+/* ============================================================
+   CODE & PRE
+   ============================================================ */
+
+code {
+    background: var(--DarkGreenBG);
+    padding: 2px 6px;
+    border: var(--Inset);
+    color: var(--Maize);
+    font-family: 'Courier New', monospace;
+}
+
+pre {
+    background: var(--DarkGreenBG);
+    border: var(--Inset);
+    padding: 10px;
+    overflow-x: auto;
+    color: var(--OffWhite);
+}
+
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+
+/* ============================================================
+   HORIZONTAL RULE
+   ============================================================ */
+
+hr {
+    border: none;
+    border-top: 1px solid var(--BorderBright);
+    margin: 15px 0;
+}
+
+
+/* ============================================================
+   PROGRESS BARS
+   ============================================================ */
+
+progress {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 20px;
+    border: var(--Inset);
+    background: var(--DarkGreenBG);
+}
+
+progress::-webkit-progress-bar {
+    background: var(--DarkGreenBG);
+}
+
+progress::-webkit-progress-value {
+    background: var(--FullGreen);
+}
+
+progress::-moz-progress-bar {
+    background: var(--FullGreen);
+}
+
+
+/* ============================================================
+   TOOLTIPS
+   ============================================================ */
+
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background: var(--GreenBG);
+    border: var(--Outset);
+    color: var(--OffWhite);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    margin-bottom: 5px;
+    z-index: 1000;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+}
+
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+.text-muted {
+    color: var(--Label);
+}
+
+.text-disabled {
+    color: var(--DisabledText1);
+}
+
+.text-highlight {
+    color: var(--Maize);
+}
+
+.bg-dark {
+    background: var(--DarkGreenBG);
+}
+
+.bg-normal {
+    background: var(--GreenBG);
+}
+
+.bg-light {
+    background: var(--LightGreenBG);
+}
+
+.border-outset {
+    border: var(--Outset);
+}
+
+.border-inset {
+    border: var(--Inset);
+}
+
+.no-border {
+    border: none;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-center {
+    justify-content: center;
+    align-items: center;
+}
+
+.gap-small {
+    gap: 5px;
+}
+
+.gap-medium {
+    gap: 10px;
+}
+
+.gap-large {
+    gap: 20px;
+}
+
+
+/* ============================================================
+   RESPONSIVE UTILITIES
+   ============================================================ */
+
+@media (max-width: 768px) {
+    nav ul, .navbar ul {
+        flex-direction: column;
+    }
+    
+    .modal, .dialog {
+        width: 95%;
+        max-width: none;
+    }
+}
+
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .modal-overlay, .dialog-overlay,
+    nav, .navbar,
+    button, .button {
+        display: none;
+    }
+}

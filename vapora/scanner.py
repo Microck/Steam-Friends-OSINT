@@ -21,8 +21,8 @@ def scan_network(
     """BFS crawl of friends; returns a state dict suitable for export."""
     state = resume_state or {
         "seed": seed_steamid,
-        "nodes": {},       # steamid -> data
-        "edges": [],       # dicts: {a,b,type}
+        "nodes": {},  # steamid -> data
+        "edges": [],  # dicts: {a,b,type}
         "visited": [],
         "queue": [],
         "meta": {"depth": depth},
@@ -44,21 +44,17 @@ def scan_network(
             continue
         visited.add(sid)
 
-        # ensure node
         if sid not in nodes:
             nodes[sid] = {"steamid": sid}
 
-        # fetch friends
         friends = api.get_friend_list(sid)
         nodes[sid]["friends"] = friends
 
-        # enqueue next layer
         if d < depth:
             for f in friends:
                 if f not in visited:
                     q.append((f, d + 1))
 
-        # friend edges
         for f in friends:
             edges.append({"a": sid, "b": f, "type": "friend"})
 
@@ -68,7 +64,6 @@ def scan_network(
 
     pbar.close()
 
-    # summaries/bans for all discovered nodes
     all_ids = list(nodes.keys())
     summaries = api.get_player_summaries(all_ids)
     bans = api.get_player_bans(all_ids)
@@ -79,6 +74,10 @@ def scan_network(
         nodes[sid]["personaname"] = p.get("personaname")
         nodes[sid]["profileurl"] = p.get("profileurl")
         nodes[sid]["is_public"] = True if vis == 3 else False
+        # location codes for location inference
+        nodes[sid]["loccountrycode"] = p.get("loccountrycode")
+        nodes[sid]["locstatecode"] = p.get("locstatecode")
+        nodes[sid]["loccityid"] = p.get("loccityid")
 
         b = bans.get(sid, {})
         nodes[sid]["bans"] = {

@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple
 import networkx as nx
 from community import community_louvain
 
-from .utils import ensure_dir, write_json
+from .utils import ensure_dir
 
 
 def _clean_edges(nodes: Dict[str, Dict], edges: List[Dict]) -> List[Dict]:
@@ -49,8 +49,11 @@ def export_gephi(
     state: Dict,
     out_dir: Path,
     hub_percentile: float = 0.99,
-) -> Tuple[Path, Path, Path]:
-    """Compute metrics and export CSVs; returns paths."""
+) -> Tuple[Path, Path]:
+    """
+    Compute metrics and export CSVs under 'graphi' folder.
+    Returns (nodes_csv, edges_csv). scan.json is not written here.
+    """
     nodes = state["nodes"]
     edges = _clean_edges(nodes, state["edges"])
     G = _build_graph(nodes, edges)
@@ -61,16 +64,14 @@ def export_gephi(
     bet = nx.betweenness_centrality(G)
     mod = community_louvain.best_partition(G)
 
-    # hub flag
+    # hub flag threshold
     if bet:
-        thresh = sorted(bet.values(), reverse=True)[
-            max(0, int(len(bet) * hub_percentile) - 1)
-        ]
+        idx = max(0, int(len(bet) * hub_percentile) - 1)
+        thresh = sorted(bet.values(), reverse=True)[idx]
     else:
         thresh = 1.0
 
-    # export
-    gephi_dir = out_dir / "gephi"
+    gephi_dir = out_dir / "graphi"
     ensure_dir(gephi_dir)
     nodes_csv = gephi_dir / "nodes.csv"
     edges_csv = gephi_dir / "edges.csv"
@@ -102,11 +103,7 @@ def export_gephi(
         for e in edges:
             f.write(f"{e['a']},{e['b']},{e.get('type','friend')}\n")
 
-    # save raw
-    raw_json = out_dir / "scan.json"
-    write_json(raw_json, state)
-
-    return nodes_csv, edges_csv, raw_json
+    return nodes_csv, edges_csv
 
 
 def _esc(s: str) -> str:
